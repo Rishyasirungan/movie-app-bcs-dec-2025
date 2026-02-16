@@ -1,6 +1,6 @@
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
-import { Link, Navigate, Route, Routes } from "react-router";
+import { data, Link, Navigate, Route, Routes } from "react-router";
 import "./index.css";
 import { MovieList } from "./Movielist";
 import { UserList } from "./UserList";
@@ -39,7 +39,7 @@ function App() {
         <Route path="/movielist" element={<MovieList />} />
         <Route path="/userlist" element={<UserList />} />
         <Route path="/addmovie" element={<AddMovie />} />
-        <Route path="/movielist/editmovie/:id" element={<EditedMovie/>} />
+        <Route path="/movielist/editmovie/:id" element={<EditedMovie />} />
       </Routes>
     </>
   );

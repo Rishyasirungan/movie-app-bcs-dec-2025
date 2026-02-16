@@ -1,50 +1,73 @@
 import { useFormik } from "formik";
+import { useParams, useNavigate} from "react-router";
+import { number, string, object } from "yup";
+import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+import { useEffect, useState } from "react";
+import EditSquareIcon from '@mui/icons-material/EditSquare';
 
+let loginValidationSchema = object({
+  name: string().required(),
+  poster: string().required(),
+  rating : number().required(),
+  summary: string().required(),
+  trailer: string().required()
+});
 
-export function EditedMovie (){
+export function EditedMovie() {
+  // fetch(`https://6971f5e732c6bacb12c5386f.mockapi.io/movielist/${data.id}`, {
+  //   method: "PUT",
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //   },
+  //   body: JSON.stringify(data),
+  // })
+  //   .then((res) => res.json())
+  //   .then((mv) => getMovies(mv));
 
-        
-        fetch(`https://6971f5e732c6bacb12c5386f.mockapi.io/movielist/${data.id}`, 
-          {
-          method: "PUT",
-          headers:{
-            "Content-Type" : "application/json"
-          },
-          body: JSON.stringify({
-            "name": "Parasakthi",
-            "poster": "https://assets-in.bmscdn.com/discovery-catalog/events/et00431398-kmxrrdfpbu-portrait.jpg",
-            "rating": 5,
-            "trailer": "https://www.youtube.com/watch?v=parasakthi_trailer",
-            "summary": "Set in the 1960s, this period drama starring Sivakarthikeyan focuses on the anti-Hindi imposition agitation in Tamil Nadu, following two brothers on opposite sides of the law during a turbulent political movement."
-          })
-        })
-        .then((res)=>res.json())
-        .then((mv) => getMovies(mv));
-        
-      
+  const params = useParams();
+  // console.log(params)
+  const id = Number(params.id)
+  // console.log(id)
+
+  const [editMvData, setEdit]=useState({})
+
+  useEffect(()=>{
+  fetch(`https://6971f5e732c6bacb12c5386f.mockapi.io/movielist/${id}`)
+  .then(res=>res.json())
+  .then((data)=>setEdit(data))
+  }, [id])
+
+  console.log(editMvData)
+ 
 
   const formik = useFormik({
     initialValues: {
-      name: data.name,
-      poster: data.poster,
-      rating: data.rating,
-      summary: data.summary,
-      trailer: data.trailer,
+      name: editMvData?.name || "" ,
+      poster: editMvData?.poster || "",
+      rating: editMvData?.rating || "",
+      summary: editMvData?.summary|| "",
+      trailer: editMvData?.trailer|| ""
     },
+    enableReinitialize: true,
     validationSchema: loginValidationSchema,
-    onSubmit: (editeddata) => {
+    onSubmit: (data) => {
       console.log("When all validations passes");
-      console.log("All data", editeddata);
-      fetch('https://6971f5e732c6bacb12c5386f.mockapi.io/movielist',
-        {method : "PUT" , 
+      console.log("All data", data);
+      const editedData = {
+        ...data,
+        rating : Number(data.rating)
+      }
+      fetch(`https://6971f5e732c6bacb12c5386f.mockapi.io/movielist/${id}`, {
+        method: "PUT",
         headers: {
-          "Content-Type" : "application/json"
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(editeddata)
-      }, 
-      )
-      .then((res)=>res.json())
-      .then((mov)=>console.log(mov))
+        body: JSON.stringify(editedData),
+      })
+        .then((res) => res.json())
+        .then(() => alert('Update Successfully'));
     },
   });
   return (
@@ -56,6 +79,7 @@ export function EditedMovie (){
       noValidate
       autoComplete="off"
     >
+      <h4>Edit-Movie</h4>
       <TextField
         label="Movie-Name"
         variant="outlined"
@@ -102,9 +126,9 @@ export function EditedMovie (){
         onChange={formik.handleChange}
         name="trailer"
       />
-      <Button type="submit" variant="contained" startIcon={<AddIcon />} >
+      <Button type="submit" variant="contained" startIcon={<EditSquareIcon />}>
         Edit Movie
       </Button>
     </Box>
   );
-  };
+}
