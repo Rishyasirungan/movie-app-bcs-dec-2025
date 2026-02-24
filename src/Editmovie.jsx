@@ -1,18 +1,18 @@
 import { useFormik } from "formik";
-import { useParams, useNavigate} from "react-router";
+import { useParams, useNavigate } from "react-router";
 import { number, string, object } from "yup";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { useEffect, useState } from "react";
-import EditSquareIcon from '@mui/icons-material/EditSquare';
+import EditSquareIcon from "@mui/icons-material/EditSquare";
 
 let loginValidationSchema = object({
   name: string().required(),
   poster: string().required(),
-  rating : number().required(),
+  rating: number().required(),
   summary: string().required(),
-  trailer: string().required()
+  trailer: string().required(),
 });
 
 export function EditedMovie() {
@@ -28,27 +28,27 @@ export function EditedMovie() {
 
   const params = useParams();
   // console.log(params)
-  const id = Number(params.id)
+  const id = Number(params.id);
   // console.log(id)
 
-  const [editMvData, setEdit]=useState({})
+  const [editMvData, setEdit] = useState({});
 
-  useEffect(()=>{
-  fetch(`https://6971f5e732c6bacb12c5386f.mockapi.io/movielist/${id}`)
-  .then(res=>res.json())
-  .then((data)=>setEdit(data))
-  }, [id])
+  useEffect(() => {
+    fetch(`https://6971f5e732c6bacb12c5386f.mockapi.io/movielist/${id}`)
+      .then((res) => res.json())
+      .then((data) => setEdit(data));
+  }, [id]);
 
-  console.log(editMvData)
- 
+  console.log(editMvData);
 
+  const navigate = useNavigate();
   const formik = useFormik({
     initialValues: {
-      name: editMvData?.name || "" ,
+      name: editMvData?.name || "",
       poster: editMvData?.poster || "",
       rating: editMvData?.rating || "",
-      summary: editMvData?.summary|| "",
-      trailer: editMvData?.trailer|| ""
+      summary: editMvData?.summary || "",
+      trailer: editMvData?.trailer || "",
     },
     enableReinitialize: true,
     validationSchema: loginValidationSchema,
@@ -57,8 +57,8 @@ export function EditedMovie() {
       console.log("All data", data);
       const editedData = {
         ...data,
-        rating : Number(data.rating)
-      }
+        rating: Number(data.rating),
+      };
       fetch(`https://6971f5e732c6bacb12c5386f.mockapi.io/movielist/${id}`, {
         method: "PUT",
         headers: {
@@ -67,7 +67,10 @@ export function EditedMovie() {
         body: JSON.stringify(editedData),
       })
         .then((res) => res.json())
-        .then(() => alert('Update Successfully'));
+        .then(() => {
+          alert("Update Successfully");
+          navigate("/movielist");
+        });
     },
   });
   return (

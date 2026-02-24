@@ -36,7 +36,10 @@ export function AddMovie() {
       }, 
       )
       .then((res)=>res.json())
-      .then((mov)=>console.log(mov))
+      .then((mov)=>{
+        alert("Added Successfully"),
+        navigate('/movielist')
+      })
     },
   });
   return (
