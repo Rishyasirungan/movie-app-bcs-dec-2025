@@ -5,6 +5,7 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
+import { useNavigate } from "react-router";
 
 let loginValidationSchema = object({
   name: string().required(),
@@ -15,6 +16,7 @@ let loginValidationSchema = object({
 });
 
 export function AddMovie() {
+  const navigate = useNavigate()
   const formik = useFormik({
     initialValues: {
       name: "",
@@ -36,10 +38,10 @@ export function AddMovie() {
       }, 
       )
       .then((res)=>res.json())
-      .then((mov)=>{
-        alert("Added Successfully"),
-        navigate('/movielist')
-      })
+      .then(()=>{
+        alert("Added Successfully");
+        navigate('/movielist');
+      });
     },
   });
   return (
